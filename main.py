@@ -238,21 +238,30 @@ def handle_textmessage(event):
             return
         day_ = recieve_message[1]
         user_id = event.source.user_id
-        query_str = "select * from accounting_items where time>=now()-"+str(day_)
-        print(query_str)
-        result = db.queryData(query_str)
-        points = result.get_points(tags={'user': str(user_id)})
-        sum = 0
-        reply_text = ''
-        for i, point in enumerate(points):
-            sum = sum + point['money']
+        try:
+            query_str = "select * from accounting_items where time>=now()-"+str(day_)
+            print(query_str)
+            result = db.queryData(query_str)
+        except:
+            My_LineBotAPI.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                    text="Should input what 'd', ex:#sum 1d !"
+                )
+                )
+        else:
+            points = result.get_points(tags={'user': str(user_id)})
+            sum = 0
+            reply_text = ''
+            for i, point in enumerate(points):
+                sum = sum + point['money']
 
-        My_LineBotAPI.reply_message(
-            event.reply_token,
-            TextSendMessage(
-                text="sum :"+str(sum)
-            )
-        )
+            My_LineBotAPI.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                     text="sum :"+str(sum)
+             )
+         )
 
     else:
         My_LineBotAPI.reply_message(
