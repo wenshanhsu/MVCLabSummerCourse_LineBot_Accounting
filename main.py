@@ -16,6 +16,7 @@ init DB
 class DB():
     def __init__(self, ip, port, user, password, db_name):
         self.client = InfluxDBClient(ip, port, user, password, db_name) 
+        self.client.create_database(db_name)
         print('Influx DB init.....')
 
     def insertData(self, data):
